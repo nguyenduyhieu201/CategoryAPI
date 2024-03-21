@@ -19,7 +19,7 @@ namespace CategoryAPI.Services
 
         public LoginResponseModel Authenticate(LoginModel loginModel)
         {
-            if(!loginModel.Equals(username)  || !loginModel.Equals(password))
+            if(!loginModel.username.Equals(username)  || !loginModel.password.Equals(password))
             {
                 return new LoginResponseModel
                 {
@@ -39,7 +39,7 @@ namespace CategoryAPI.Services
 
         public string GenerateToken(string username)
         {
-            var secretKey = _configuration["JwtConfig:secret"];
+            var secretKey = _configuration["JwtConfig:secretKey"];
             var issuer = _configuration["JwtConfig:validIssuer"];
             var audience = _configuration["JwtConfig:validAudience"];
             var expiresIn = Convert.ToInt32(_configuration["JwtConfig:expiresIn"]);
@@ -62,5 +62,8 @@ namespace CategoryAPI.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+
     }
 }

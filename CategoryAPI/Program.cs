@@ -1,4 +1,6 @@
 using CategoryAPI.Extensions;
+using CategoryAPI.Infrastructure;
+using CategoryAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton(typeof(CategoryDbContext));
+builder.Services.AddScoped<IAuthenService, AuthenService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();    
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddSwaggerGen();
 

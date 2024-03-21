@@ -8,7 +8,6 @@ namespace CategoryAPI.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private IConfiguration _configuration;
         private IAuthenService _authenService;
         public AuthController (IAuthenService authenService)
         {
