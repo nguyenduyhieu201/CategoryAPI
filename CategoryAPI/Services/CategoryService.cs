@@ -19,7 +19,7 @@ namespace CategoryAPI.Services
             if (_dbContext.Categories.Any(category => category.Name.Equals(name))) {
                 return new Result<Category> {
                     Data = null,
-                    isSuccess = false };
+                    IsSuccess = false };
             }
             var category = new Category
             {
@@ -32,7 +32,7 @@ namespace CategoryAPI.Services
 
             return new Result<Category> {
                 Data = category,
-                isSuccess = true
+                IsSuccess = true
             };
 
         }
@@ -40,9 +40,9 @@ namespace CategoryAPI.Services
         public async Task<Result<Category>> UpdateCategory(string Id, string Name)
         {
             var category = await GetById(Id);
-            if (category.isSuccess == false) return new Result<Category>
+            if (category.IsSuccess == false) return new Result<Category>
             {
-                isSuccess = false,
+                IsSuccess = false,
                 Message = "Category not exists"
             };
 
@@ -59,15 +59,59 @@ namespace CategoryAPI.Services
             {
                 return new Result<Category>
                 {
-                    isSuccess = false
+                    IsSuccess = false,
+                    Message = "Cannot find the category"
                 };
             }
 
             return new Result<Category>
             {
-                isSuccess = true,
+                IsSuccess = true,
                 Data = category,
             };
+        }
+
+        public async Task<Result<Category>> DeleteCategory(string Id)
+        {
+            var category = await GetById(Id);
+            if (category.IsSuccess == false)
+            {
+                return new Result<Category>
+                {
+                    Message = "Cannot find category",
+                    IsSuccess = false
+                };
+            }
+
+            _dbContext.Categories.Remove(category.Data);
+            await _dbContext.SaveChangesAsync();
+            return category;
+        }
+
+        public async Task<Result<List<CategoryListModel>>> List(string name)
+        {
+            var categories = await _dbContext.Categories.Where (category =>  category.Name.Contains(name)).
+                Select(category => new CategoryListModel { 
+                    CategoryName = category.Name,
+                }).ToListAsync();
+            if (categories.Count == 0)
+            {
+                return new Result<List<CategoryListModel>>
+                {
+                    IsSuccess = false,
+                    Message = "cannot find appropriate category"
+                };
+            }
+
+            return new Result<List<CategoryListModel>>
+            {
+                IsSuccess = true,
+                Data = categories,
+                Message = "Success"
+            };
+
+
+
         }
     }
 }

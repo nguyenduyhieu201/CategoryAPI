@@ -3,7 +3,7 @@
     public class Result<T>
     {
         public T Data;
-        public bool isSuccess;
+        public bool IsSuccess;
         public string Message;
     }
 
