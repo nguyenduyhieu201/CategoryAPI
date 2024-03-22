@@ -24,5 +24,13 @@ namespace CategoryAPI.Controllers
             }
             return Ok(result.Data);
         }
+
+        [HttpPut("{categoryId}")]
+        public async Task<IActionResult> UpdateCategory([FromRoute] string categoryId, [FromBody] string name)
+        {
+            var result = await _categoryService.UpdateCategory(categoryId, name);
+            if (!result.isSuccess) return BadRequest(new {message = $"{result.Message}"});
+            return Ok(result.Data);
+        }
     }
 }

@@ -4,5 +4,8 @@
     {
         public T Data;
         public bool isSuccess;
+        public string Message;
     }
+
+
 }

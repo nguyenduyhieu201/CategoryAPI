@@ -24,7 +24,7 @@ namespace CategoryAPI.Services
             var category = new Category
             {
                 Name = name,
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid().ToString()
             };
 
             await _dbContext.Categories.AddAsync(category);
@@ -35,6 +35,39 @@ namespace CategoryAPI.Services
                 isSuccess = true
             };
 
+        }
+
+        public async Task<Result<Category>> UpdateCategory(string Id, string Name)
+        {
+            var category = await GetById(Id);
+            if (category.isSuccess == false) return new Result<Category>
+            {
+                isSuccess = false,
+                Message = "Category not exists"
+            };
+
+            category.Data.Name = Name;
+            await _dbContext.SaveChangesAsync();
+            return category;
+        }
+
+        public async Task<Result<Category>> GetById(string Id)
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(category => category.Id.Equals(Id));
+            //throw new NotImplementedException();
+            if (category == null)
+            {
+                return new Result<Category>
+                {
+                    isSuccess = false
+                };
+            }
+
+            return new Result<Category>
+            {
+                isSuccess = true,
+                Data = category,
+            };
         }
     }
 }
